@@ -1,0 +1,43 @@
+{
+  "name": "@kframesa/react-crosscast-lazy-image",
+  "version": "0.0.1",
+  "description": "Lazy-loading React image component based on CrossCast api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src --out-dir .",
+    "prepublish": "npm run build"
+  },
+  "keywords": [
+    "react-component",
+    "crosscast",
+    "lazy-loading",
+    "images"
+  ],
+  "author": "Kframe Interactive SA <marco@kframeinteractive.com>",
+  "dependencies": {
+    "@babel/polyfill": "^7.4.4",
+    "prop-types": "^15.7.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "install": "^0.12.2",
+    "npm": "^6.9.2",
+    "standard": "^12.0.1"
+  },
+  "peerDependencies": {
+    "react": "^16.8.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kframesa/react-crosscast-lazy-image.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kframesa/react-crosscast-lazy-image/issues"
+  },
+  "homepage": "https://github.com/kframesa/react-crosscast-lazy-image#readme"
+}
