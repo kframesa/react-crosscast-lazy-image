@@ -182,7 +182,6 @@ class CrossCastLazyImage extends React.Component {
       let placeholder = new Image();
       placeholder.onload = e => {
         const path = e.path || (e.composedPath && e.composedPath());
-        console.log("loaded", path);
         this.setState({
           dimensions: {
             height: path[0].naturalHeight,

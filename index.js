@@ -218,7 +218,6 @@ function (_React$Component) {
 
         placeholder.onload = function (e) {
           var path = e.path || e.composedPath && e.composedPath();
-          console.log("loaded", path);
 
           _this2.setState({
             dimensions: {
