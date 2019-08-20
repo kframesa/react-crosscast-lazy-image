@@ -68,9 +68,10 @@ var imageCache = {};
 
 var inImageCache = function inImageCache(props) {
   var image = props.fluid || props.fixed;
+  var ext = props.ext || ".jpg";
   var params = props.fluid ? "".concat(image.height ? "".concat(image.maxWidth, "x").concat(image.height) : "maxw-".concat(image.maxWidth)) : "".concat(image.width, "x").concat(image.height); // Find src
 
-  var src = "https://scontent.ccdn.cloud/image/".concat(props.platformSlug, "/").concat(props.imageGuid, "/").concat(params, ".jpg");
+  var src = "https://scontent.ccdn.cloud/image/".concat(props.platformSlug, "/").concat(props.imageGuid, "/").concat(params).concat(ext);
 
   if (imageCache[src]) {
     return true;
@@ -169,8 +170,7 @@ function (_React$Component) {
     var isVisible = true;
     var imgLoaded = true;
     var IOSupported = false;
-    var fadeIn = props.fadeIn;
-    var dimensions = {}; // If this image has already been loaded before then we can assume it's
+    var fadeIn = props.fadeIn; // If this image has already been loaded before then we can assume it's
     // already in the browser cache so it's cheap to just show directly.
 
     var seenBefore = inImageCache(props);
@@ -194,8 +194,7 @@ function (_React$Component) {
       IOSupported: IOSupported,
       fadeIn: fadeIn,
       hasNoScript: hasNoScript,
-      seenBefore: seenBefore,
-      dimensions: dimensions
+      seenBefore: seenBefore
     };
     _this.imageRef = _react["default"].createRef();
     _this.handleImageLoaded = _this.handleImageLoaded.bind(_assertThisInitialized(_this));
@@ -204,40 +203,13 @@ function (_React$Component) {
   }
 
   _createClass(CrossCastLazyImage, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this2 = this;
-
-      var _this$props = this.props,
-          fluid = _this$props.fluid,
-          platformSlug = _this$props.platformSlug,
-          imageGuid = _this$props.imageGuid;
-
-      if (fluid && !fluid.height) {
-        var placeholder = new Image();
-
-        placeholder.onload = function (e) {
-          var path = e.path || e.composedPath && e.composedPath();
-
-          _this2.setState({
-            dimensions: {
-              height: path[0].naturalHeight,
-              width: path[0].naturalWidth
-            }
-          });
-        };
-
-        placeholder.src = "https://scontent.ccdn.cloud/image/".concat(platformSlug, "/").concat(imageGuid, "/maxw-20.jpg");
-      }
-    }
-  }, {
     key: "handleRef",
     value: function handleRef(ref) {
-      var _this3 = this;
+      var _this2 = this;
 
       if (this.state.IOSupported && ref) {
         listenToIntersections(ref, function () {
-          _this3.setState({
+          _this2.setState({
             isVisible: true
           });
         });
@@ -263,10 +235,11 @@ function (_React$Component) {
     value: function createBrakePointsFixed() {
       var results = [];
       var image = this.props.fixed;
+      var ext = this.props.ext || ".jpg";
 
       for (var i = 1; i < 3; i++) {
         var params = "".concat(image.width * i, "x").concat(image.height * i);
-        results.push("https://scontent.ccdn.cloud/image/".concat(this.props.platformSlug, "/").concat(this.props.imageGuid, "/").concat(params, ".jpg ").concat(i, "x"));
+        results.push("https://scontent.ccdn.cloud/image/".concat(this.props.platformSlug, "/").concat(this.props.imageGuid, "/").concat(params).concat(ext, " ").concat(i, "x"));
       }
 
       return results.join(",");
@@ -275,42 +248,46 @@ function (_React$Component) {
     key: "createBrakePointsFluid",
     value: function createBrakePointsFluid(ratio) {
       var image = this.props.fluid;
+      var ext = this.props.ext || ".jpg";
       var step = image.step || 150;
       var size = 150;
       var results = [];
 
       while (size < image.maxWidth) {
         var params = "".concat(image.height ? "".concat(size, "x").concat(Math.round(size * ratio)) : "maxw-".concat(size));
-        results.push("https://scontent.ccdn.cloud/image/".concat(this.props.platformSlug, "/").concat(this.props.imageGuid, "/").concat(params, ".jpg ").concat(size, "w"));
+        results.push("https://scontent.ccdn.cloud/image/".concat(this.props.platformSlug, "/").concat(this.props.imageGuid, "/").concat(params).concat(ext, " ").concat(size, "w"));
         size = size + step;
       }
 
-      results.push("https://scontent.ccdn.cloud/image/".concat(this.props.platformSlug, "/").concat(this.props.imageGuid, "/").concat(image.height ? "".concat(image.maxWidth, "x").concat(image.height) : "maxw-".concat(image.maxWidth), ".jpg ").concat(image.maxWidth, "w"));
+      results.push("https://scontent.ccdn.cloud/image/".concat(this.props.platformSlug, "/").concat(this.props.imageGuid, "/").concat(image.height ? "".concat(image.maxWidth, "x").concat(image.height) : "maxw-".concat(image.maxWidth)).concat(ext, " ").concat(image.maxWidth, "w"));
       return results.join(",");
     }
   }, {
     key: "getRatio",
-    value: function getRatio(dimensions) {
-      if (dimensions.width && dimensions.height) return 1 / (dimensions.width / dimensions.height);
+    value: function getRatio(width, height) {
+      if (width && height) return 1 / (width / height);
       return 0;
     }
   }, {
     key: "render",
     value: function render() {
-      var _this$props2 = this.props,
-          title = _this$props2.title,
-          alt = _this$props2.alt,
-          platformSlug = _this$props2.platformSlug,
-          imageGuid = _this$props2.imageGuid,
-          _this$props2$style = _this$props2.style,
-          style = _this$props2$style === void 0 ? {} : _this$props2$style,
-          _this$props2$imgStyle = _this$props2.imgStyle,
-          imgStyle = _this$props2$imgStyle === void 0 ? {} : _this$props2$imgStyle,
-          _this$props2$placehol = _this$props2.placeholderStyle,
-          placeholderStyle = _this$props2$placehol === void 0 ? {} : _this$props2$placehol,
-          fluid = _this$props2.fluid,
-          fixed = _this$props2.fixed,
-          backgroundColor = _this$props2.backgroundColor;
+      var _this$props = this.props,
+          title = _this$props.title,
+          alt = _this$props.alt,
+          platformSlug = _this$props.platformSlug,
+          imageGuid = _this$props.imageGuid,
+          _this$props$style = _this$props.style,
+          style = _this$props$style === void 0 ? {} : _this$props$style,
+          _this$props$imgStyle = _this$props.imgStyle,
+          imgStyle = _this$props$imgStyle === void 0 ? {} : _this$props$imgStyle,
+          _this$props$placehold = _this$props.placeholderStyle,
+          placeholderStyle = _this$props$placehold === void 0 ? {} : _this$props$placehold,
+          fluid = _this$props.fluid,
+          fixed = _this$props.fixed,
+          backgroundColor = _this$props.backgroundColor,
+          width = _this$props.width,
+          height = _this$props.height;
+      var ext = this.props.ext || ".jpg";
       var params = makeUrlParams(this.props);
       var bgColor = typeof backgroundColor === "boolean" ? "lightgray" : backgroundColor;
 
@@ -330,7 +307,7 @@ function (_React$Component) {
         alt: !this.state.isVisible ? alt : "",
         style: imagePlaceholderStyle
       };
-      var ratio = this.getRatio(this.state.dimensions);
+      var ratio = this.getRatio(width, height);
       var image;
       var divStyle;
       var bgPlaceholderStyles;
@@ -345,7 +322,7 @@ function (_React$Component) {
 
         if (ratio !== 0) {
           divStyle = _objectSpread({}, divStyle, {
-            paddingBottom: "".concat(Math.round(ratio * 100), "%")
+            paddingBottom: "".concat((ratio * 100).toFixed(2), "%")
           });
         }
 
@@ -388,18 +365,19 @@ function (_React$Component) {
       }
 
       if (fluid || fixed) {
+        image.src = "https://scontent.ccdn.cloud/image/".concat(platformSlug, "/").concat(imageGuid, "/").concat(params).concat(ext);
         return _react["default"].createElement("div", {
           style: divStyle,
           ref: this.handleRef
         }, !bgColor && _react["default"].createElement(Img, _extends({
-          src: "https://scontent.ccdn.cloud/image/".concat(platformSlug, "/").concat(imageGuid, "/maxw-20.jpg")
+          src: "https://scontent.ccdn.cloud/image/".concat(platformSlug, "/").concat(imageGuid, "/maxw-20").concat(ext)
         }, placeholderImageProps)), bgColor && _react["default"].createElement("div", {
           title: title,
           style: bgPlaceholderStyles
         }), this.state.isVisible && _react["default"].createElement(Img, {
           alt: alt,
           title: title,
-          src: "https://scontent.ccdn.cloud/image/".concat(platformSlug, "/").concat(imageGuid, "/").concat(params, ".jpg"),
+          src: image.src,
           srcSet: srcSet,
           style: imageStyle,
           ref: this.imageRef,

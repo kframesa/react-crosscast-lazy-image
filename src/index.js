@@ -27,6 +27,7 @@ const makeUrlParams = props => {
 const imageCache = {};
 const inImageCache = props => {
   const image = props.fluid || props.fixed;
+  const ext = props.ext || ".jpg";
   const params = props.fluid
     ? `${
         image.height
@@ -37,7 +38,7 @@ const inImageCache = props => {
   // Find src
   const src = `https://scontent.ccdn.cloud/image/${props.platformSlug}/${
     props.imageGuid
-  }/${params}.jpg`;
+  }/${params}${ext}`;
 
   if (imageCache[src]) {
     return true;
@@ -136,7 +137,6 @@ class CrossCastLazyImage extends React.Component {
     let imgLoaded = true;
     let IOSupported = false;
     let fadeIn = props.fadeIn;
-    let dimensions = {};
 
     // If this image has already been loaded before then we can assume it's
     // already in the browser cache so it's cheap to just show directly.
@@ -166,31 +166,12 @@ class CrossCastLazyImage extends React.Component {
       IOSupported,
       fadeIn,
       hasNoScript,
-      seenBefore,
-      dimensions
+      seenBefore
     };
 
     this.imageRef = React.createRef();
     this.handleImageLoaded = this.handleImageLoaded.bind(this);
     this.handleRef = this.handleRef.bind(this);
-  }
-
-  componentDidMount() {
-    const { fluid, platformSlug, imageGuid } = this.props;
-
-    if (fluid && !fluid.height) {
-      let placeholder = new Image();
-      placeholder.onload = e => {
-        const path = e.path || (e.composedPath && e.composedPath());
-        this.setState({
-          dimensions: {
-            height: path[0].naturalHeight,
-            width: path[0].naturalWidth
-          }
-        });
-      };
-      placeholder.src = `https://scontent.ccdn.cloud/image/${platformSlug}/${imageGuid}/maxw-20.jpg`;
-    }
   }
 
   handleRef(ref) {
@@ -212,12 +193,14 @@ class CrossCastLazyImage extends React.Component {
   createBrakePointsFixed() {
     const results = [];
     const image = this.props.fixed;
+    const ext = this.props.ext || ".jpg";
+
     for (let i = 1; i < 3; i++) {
       const params = `${image.width * i}x${image.height * i}`;
       results.push(
         `https://scontent.ccdn.cloud/image/${this.props.platformSlug}/${
           this.props.imageGuid
-        }/${params}.jpg ${i}x`
+        }/${params}${ext} ${i}x`
       );
     }
     return results.join(",");
@@ -225,9 +208,11 @@ class CrossCastLazyImage extends React.Component {
 
   createBrakePointsFluid(ratio) {
     const image = this.props.fluid;
+    const ext = this.props.ext || ".jpg";
     const step = image.step || 150;
     let size = 150;
     const results = [];
+
     while (size < image.maxWidth) {
       const params = `${
         image.height ? `${size}x${Math.round(size * ratio)}` : `maxw-${size}`
@@ -235,7 +220,7 @@ class CrossCastLazyImage extends React.Component {
       results.push(
         `https://scontent.ccdn.cloud/image/${this.props.platformSlug}/${
           this.props.imageGuid
-        }/${params}.jpg ${size}w`
+        }/${params}${ext} ${size}w`
       );
       size = size + step;
     }
@@ -247,14 +232,13 @@ class CrossCastLazyImage extends React.Component {
         image.height
           ? `${image.maxWidth}x${image.height}`
           : `maxw-${image.maxWidth}`
-      }.jpg ${image.maxWidth}w`
+      }${ext} ${image.maxWidth}w`
     );
     return results.join(",");
   }
 
-  getRatio(dimensions) {
-    if (dimensions.width && dimensions.height)
-      return 1 / (dimensions.width / dimensions.height);
+  getRatio(width, height) {
+    if (width && height) return 1 / (width / height);
     return 0;
   }
 
@@ -269,8 +253,12 @@ class CrossCastLazyImage extends React.Component {
       placeholderStyle = {},
       fluid,
       fixed,
-      backgroundColor
+      backgroundColor,
+      width,
+      height
     } = this.props;
+
+    const ext = this.props.ext || ".jpg";
 
     let params = makeUrlParams(this.props);
 
@@ -296,7 +284,7 @@ class CrossCastLazyImage extends React.Component {
       alt: !this.state.isVisible ? alt : ``,
       style: imagePlaceholderStyle
     };
-    const ratio = this.getRatio(this.state.dimensions);
+    const ratio = this.getRatio(width, height);
     let image;
     let divStyle;
     let bgPlaceholderStyles;
@@ -313,7 +301,7 @@ class CrossCastLazyImage extends React.Component {
       if (ratio !== 0) {
         divStyle = {
           ...divStyle,
-          paddingBottom: `${Math.round(ratio * 100)}%`
+          paddingBottom: `${(ratio * 100).toFixed(2)}%`
         };
       }
 
@@ -361,12 +349,14 @@ class CrossCastLazyImage extends React.Component {
     }
 
     if (fluid || fixed) {
+      image.src = `https://scontent.ccdn.cloud/image/${platformSlug}/${imageGuid}/${params}${ext}`;
+
       return (
         <div style={divStyle} ref={this.handleRef}>
           {/* Show a blurred version. */}
           {!bgColor && (
             <Img
-              src={`https://scontent.ccdn.cloud/image/${platformSlug}/${imageGuid}/maxw-20.jpg`}
+              src={`https://scontent.ccdn.cloud/image/${platformSlug}/${imageGuid}/maxw-20${ext}`}
               {...placeholderImageProps}
             />
           )}
@@ -379,7 +369,7 @@ class CrossCastLazyImage extends React.Component {
             <Img
               alt={alt}
               title={title}
-              src={`https://scontent.ccdn.cloud/image/${platformSlug}/${imageGuid}/${params}.jpg`}
+              src={image.src}
               srcSet={srcSet}
               style={imageStyle}
               ref={this.imageRef}
