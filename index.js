@@ -41,29 +41,8 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
-var makeUrlParams = function makeUrlParams(props) {
-  // let { urlParams, imgFormat, quality, fluid } = props;
-  // imgFormat =
-  //   typeof imgFormat === `boolean` ? (imgFormat ? `f_auto` : "") : imgFormat;
-  // quality =
-  //   typeof quality === `boolean`
-  //     ? quality
-  //       ? `q_auto`
-  //       : ""
-  //     : typeof quality === `string` && quality.includes(`q_auto`)
-  //     ? `q_auto:${quality}`
-  //     : quality;
-  // if (!urlParams || !urlParams.length) {
-  //   urlParams = "c_lfill";
-  //   if (fluid && !fluid.height) urlParams = "c_scale";
-  // }
-  // const toUrl = [imgFormat, quality, urlParams].filter(e => e && e.length);
-  // return toUrl.join(",");
-  return "";
-}; // Cache if we've seen an image before so we don't both with
+// Cache if we've seen an image before so we don't both with
 // lazy-loading & fading in on subsequent mounts.
-
-
 var imageCache = {};
 
 var inImageCache = function inImageCache(props) {
@@ -250,7 +229,7 @@ function (_React$Component) {
       var image = this.props.fluid;
       var ext = this.props.ext || ".jpg";
       var step = image.step || 150;
-      var size = 150;
+      var size = image.size || 150;
       var results = [];
 
       while (size < image.maxWidth) {
@@ -288,7 +267,6 @@ function (_React$Component) {
           width = _this$props.width,
           height = _this$props.height;
       var ext = this.props.ext || ".jpg";
-      var params = makeUrlParams(this.props);
       var bgColor = typeof backgroundColor === "boolean" ? "lightgray" : backgroundColor;
 
       var imagePlaceholderStyle = _objectSpread({
@@ -308,10 +286,12 @@ function (_React$Component) {
         style: imagePlaceholderStyle
       };
       var ratio = this.getRatio(width, height);
+      var params;
       var image;
       var divStyle;
       var bgPlaceholderStyles;
       var srcSet;
+      var sizes;
 
       if (fluid) {
         image = fluid;
@@ -337,6 +317,7 @@ function (_React$Component) {
           left: 0
         };
         srcSet = this.createBrakePointsFluid(ratio);
+        sizes = image.sizes ? image.sizes.join(", ") : "";
         params = "".concat(image.height ? "".concat(image.maxWidth, "x").concat(image.height) : "maxw-".concat(image.maxWidth));
       }
 
@@ -377,8 +358,9 @@ function (_React$Component) {
         }), this.state.isVisible && _react["default"].createElement(Img, {
           alt: alt,
           title: title,
-          src: image.src,
           srcSet: srcSet,
+          sizes: sizes,
+          src: image.src,
           style: imageStyle,
           ref: this.imageRef,
           onLoad: this.handleImageLoaded,
@@ -416,13 +398,14 @@ var fixedObject = _propTypes["default"].shape({
 var fluidObject = _propTypes["default"].shape({
   maxWidth: _propTypes["default"].number.isRequired,
   height: _propTypes["default"].number,
-  step: _propTypes["default"].number
+  step: _propTypes["default"].number,
+  size: _propTypes["default"].number,
+  sizes: _propTypes["default"].arrayOf(_propTypes["default"].string)
 });
 
 CrossCastLazyImage.propTypes = {
   fixed: fixedObject,
   fluid: fluidObject,
-  //urlParams: PropTypes.string,
   fadeIn: _propTypes["default"].bool,
   title: _propTypes["default"].string,
   alt: _propTypes["default"].string,

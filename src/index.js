@@ -1,27 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const makeUrlParams = props => {
-  // let { urlParams, imgFormat, quality, fluid } = props;
-  // imgFormat =
-  //   typeof imgFormat === `boolean` ? (imgFormat ? `f_auto` : "") : imgFormat;
-  // quality =
-  //   typeof quality === `boolean`
-  //     ? quality
-  //       ? `q_auto`
-  //       : ""
-  //     : typeof quality === `string` && quality.includes(`q_auto`)
-  //     ? `q_auto:${quality}`
-  //     : quality;
-  // if (!urlParams || !urlParams.length) {
-  //   urlParams = "c_lfill";
-  //   if (fluid && !fluid.height) urlParams = "c_scale";
-  // }
-  // const toUrl = [imgFormat, quality, urlParams].filter(e => e && e.length);
-  // return toUrl.join(",");
-  return "";
-};
-
 // Cache if we've seen an image before so we don't both with
 // lazy-loading & fading in on subsequent mounts.
 const imageCache = {};
@@ -210,7 +189,7 @@ class CrossCastLazyImage extends React.Component {
     const image = this.props.fluid;
     const ext = this.props.ext || ".jpg";
     const step = image.step || 150;
-    let size = 150;
+    let size = image.size || 150;
     const results = [];
 
     while (size < image.maxWidth) {
@@ -260,8 +239,6 @@ class CrossCastLazyImage extends React.Component {
 
     const ext = this.props.ext || ".jpg";
 
-    let params = makeUrlParams(this.props);
-
     const bgColor =
       typeof backgroundColor === `boolean` ? `lightgray` : backgroundColor;
 
@@ -285,10 +262,12 @@ class CrossCastLazyImage extends React.Component {
       style: imagePlaceholderStyle
     };
     const ratio = this.getRatio(width, height);
+    let params;
     let image;
     let divStyle;
     let bgPlaceholderStyles;
     let srcSet;
+    let sizes;
 
     if (fluid) {
       image = fluid;
@@ -316,6 +295,7 @@ class CrossCastLazyImage extends React.Component {
         left: 0
       };
       srcSet = this.createBrakePointsFluid(ratio);
+      sizes = image.sizes ? image.sizes.join(", ") : "";
       params = `${
         image.height
           ? `${image.maxWidth}x${image.height}`
@@ -369,8 +349,9 @@ class CrossCastLazyImage extends React.Component {
             <Img
               alt={alt}
               title={title}
-              src={image.src}
               srcSet={srcSet}
+              sizes={sizes}
+              src={image.src}
               style={imageStyle}
               ref={this.imageRef}
               onLoad={this.handleImageLoaded}
@@ -410,13 +391,14 @@ const fixedObject = PropTypes.shape({
 const fluidObject = PropTypes.shape({
   maxWidth: PropTypes.number.isRequired,
   height: PropTypes.number,
-  step: PropTypes.number
+  step: PropTypes.number,
+  size: PropTypes.number,
+  sizes: PropTypes.arrayOf(PropTypes.string)
 });
 
 CrossCastLazyImage.propTypes = {
   fixed: fixedObject,
   fluid: fluidObject,
-  //urlParams: PropTypes.string,
   fadeIn: PropTypes.bool,
   title: PropTypes.string,
   alt: PropTypes.string,

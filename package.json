@@ -1,7 +1,7 @@
 {
   "name": "@kframesa/react-crosscast-lazy-image",
-  "version": "0.0.7",
-  "description": "Lazy-loading React image component based on CrossCast api",
+  "version": "0.0.12",
+  "description": "Lazy-loading React image component based on CrossCast API",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
