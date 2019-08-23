@@ -47,10 +47,11 @@ var imageCache = {};
 
 var inImageCache = function inImageCache(props) {
   var image = props.fluid || props.fixed;
+  var type = props.type;
   var ext = props.ext || ".jpg";
   var params = props.fluid ? "".concat(image.height ? "".concat(image.maxWidth, "x").concat(image.height) : "maxw-".concat(image.maxWidth)) : "".concat(image.width, "x").concat(image.height); // Find src
 
-  var src = "https://scontent.ccdn.cloud/image/".concat(props.platformSlug, "/").concat(props.imageGuid, "/").concat(params).concat(ext);
+  var src = "https://scontent.ccdn.cloud/".concat(type, "/").concat(props.platformSlug, "/").concat(props.imageGuid, "/").concat(params).concat(ext);
 
   if (imageCache[src]) {
     return true;
@@ -214,11 +215,12 @@ function (_React$Component) {
     value: function createBrakePointsFixed() {
       var results = [];
       var image = this.props.fixed;
+      var type = this.props.type;
       var ext = this.props.ext || ".jpg";
 
       for (var i = 1; i < 3; i++) {
         var params = "".concat(image.width * i, "x").concat(image.height * i);
-        results.push("https://scontent.ccdn.cloud/image/".concat(this.props.platformSlug, "/").concat(this.props.imageGuid, "/").concat(params).concat(ext, " ").concat(i, "x"));
+        results.push("https://scontent.ccdn.cloud/".concat(type, "/").concat(this.props.platformSlug, "/").concat(this.props.imageGuid, "/").concat(params).concat(ext, " ").concat(i, "x"));
       }
 
       return results.join(",");
@@ -227,6 +229,7 @@ function (_React$Component) {
     key: "createBrakePointsFluid",
     value: function createBrakePointsFluid(ratio) {
       var image = this.props.fluid;
+      var type = this.props.type;
       var ext = this.props.ext || ".jpg";
       var step = image.step || 150;
       var size = image.size || 150;
@@ -234,11 +237,11 @@ function (_React$Component) {
 
       while (size < image.maxWidth) {
         var params = "".concat(image.height ? "".concat(size, "x").concat(Math.round(size * ratio)) : "maxw-".concat(size));
-        results.push("https://scontent.ccdn.cloud/image/".concat(this.props.platformSlug, "/").concat(this.props.imageGuid, "/").concat(params).concat(ext, " ").concat(size, "w"));
+        results.push("https://scontent.ccdn.cloud/".concat(type, "/").concat(this.props.platformSlug, "/").concat(this.props.imageGuid, "/").concat(params).concat(ext, " ").concat(size, "w"));
         size = size + step;
       }
 
-      results.push("https://scontent.ccdn.cloud/image/".concat(this.props.platformSlug, "/").concat(this.props.imageGuid, "/").concat(image.height ? "".concat(image.maxWidth, "x").concat(image.height) : "maxw-".concat(image.maxWidth)).concat(ext, " ").concat(image.maxWidth, "w"));
+      results.push("https://scontent.ccdn.cloud/".concat(type, "/").concat(this.props.platformSlug, "/").concat(this.props.imageGuid, "/").concat(image.height ? "".concat(image.maxWidth, "x").concat(image.height) : "maxw-".concat(image.maxWidth)).concat(ext, " ").concat(image.maxWidth, "w"));
       return results.join(",");
     }
   }, {
@@ -265,7 +268,9 @@ function (_React$Component) {
           fixed = _this$props.fixed,
           backgroundColor = _this$props.backgroundColor,
           width = _this$props.width,
-          height = _this$props.height;
+          height = _this$props.height,
+          _this$props$type = _this$props.type,
+          type = _this$props$type === void 0 ? "image" : _this$props$type;
       var ext = this.props.ext || ".jpg";
       var bgColor = typeof backgroundColor === "boolean" ? "lightgray" : backgroundColor;
 
@@ -346,12 +351,12 @@ function (_React$Component) {
       }
 
       if (fluid || fixed) {
-        image.src = "https://scontent.ccdn.cloud/image/".concat(platformSlug, "/").concat(imageGuid, "/").concat(params).concat(ext);
+        image.src = "https://scontent.ccdn.cloud/".concat(type, "/").concat(platformSlug, "/").concat(imageGuid, "/").concat(params).concat(ext);
         return _react["default"].createElement("div", {
           style: divStyle,
           ref: this.handleRef
         }, !bgColor && _react["default"].createElement(Img, _extends({
-          src: "https://scontent.ccdn.cloud/image/".concat(platformSlug, "/").concat(imageGuid, "/maxw-20").concat(ext)
+          src: "https://scontent.ccdn.cloud/".concat(type, "/").concat(platformSlug, "/").concat(imageGuid, "/maxw-20").concat(ext)
         }, placeholderImageProps)), bgColor && _react["default"].createElement("div", {
           title: title,
           style: bgPlaceholderStyles
