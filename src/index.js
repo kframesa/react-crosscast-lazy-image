@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 const imageCache = {};
 const inImageCache = props => {
   const image = props.fluid || props.fixed;
+  const type = props.type;
   const ext = props.ext || ".jpg";
   const params = props.fluid
     ? `${
@@ -15,7 +16,7 @@ const inImageCache = props => {
       }`
     : `${image.width}x${image.height}`;
   // Find src
-  const src = `https://scontent.ccdn.cloud/image/${props.platformSlug}/${
+  const src = `https://scontent.ccdn.cloud/${type}/${props.platformSlug}/${
     props.imageGuid
   }/${params}${ext}`;
 
@@ -172,12 +173,13 @@ class CrossCastLazyImage extends React.Component {
   createBrakePointsFixed() {
     const results = [];
     const image = this.props.fixed;
+    const type = this.props.type;
     const ext = this.props.ext || ".jpg";
 
     for (let i = 1; i < 3; i++) {
       const params = `${image.width * i}x${image.height * i}`;
       results.push(
-        `https://scontent.ccdn.cloud/image/${this.props.platformSlug}/${
+        `https://scontent.ccdn.cloud/${type}/${this.props.platformSlug}/${
           this.props.imageGuid
         }/${params}${ext} ${i}x`
       );
@@ -187,6 +189,7 @@ class CrossCastLazyImage extends React.Component {
 
   createBrakePointsFluid(ratio) {
     const image = this.props.fluid;
+    const type = this.props.type;
     const ext = this.props.ext || ".jpg";
     const step = image.step || 150;
     let size = image.size || 150;
@@ -197,7 +200,7 @@ class CrossCastLazyImage extends React.Component {
         image.height ? `${size}x${Math.round(size * ratio)}` : `maxw-${size}`
       }`;
       results.push(
-        `https://scontent.ccdn.cloud/image/${this.props.platformSlug}/${
+        `https://scontent.ccdn.cloud/${type}/${this.props.platformSlug}/${
           this.props.imageGuid
         }/${params}${ext} ${size}w`
       );
@@ -205,7 +208,7 @@ class CrossCastLazyImage extends React.Component {
     }
 
     results.push(
-      `https://scontent.ccdn.cloud/image/${this.props.platformSlug}/${
+      `https://scontent.ccdn.cloud/${type}/${this.props.platformSlug}/${
         this.props.imageGuid
       }/${
         image.height
@@ -234,7 +237,8 @@ class CrossCastLazyImage extends React.Component {
       fixed,
       backgroundColor,
       width,
-      height
+      height,
+      type = "image"
     } = this.props;
 
     const ext = this.props.ext || ".jpg";
@@ -329,14 +333,14 @@ class CrossCastLazyImage extends React.Component {
     }
 
     if (fluid || fixed) {
-      image.src = `https://scontent.ccdn.cloud/image/${platformSlug}/${imageGuid}/${params}${ext}`;
+      image.src = `https://scontent.ccdn.cloud/${type}/${platformSlug}/${imageGuid}/${params}${ext}`;
 
       return (
         <div style={divStyle} ref={this.handleRef}>
           {/* Show a blurred version. */}
           {!bgColor && (
             <Img
-              src={`https://scontent.ccdn.cloud/image/${platformSlug}/${imageGuid}/maxw-20${ext}`}
+              src={`https://scontent.ccdn.cloud/${type}/${platformSlug}/${imageGuid}/maxw-20${ext}`}
               {...placeholderImageProps}
             />
           )}
