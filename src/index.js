@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 const imageCache = {};
 const inImageCache = props => {
   const image = props.fluid || props.fixed;
-  const type = props.type;
+  const type = props.type || "image";
   const ext = props.ext || ".jpg";
   const params = props.fluid
     ? `${
@@ -173,7 +173,7 @@ class CrossCastLazyImage extends React.Component {
   createBrakePointsFixed() {
     const results = [];
     const image = this.props.fixed;
-    const type = this.props.type;
+    const type = this.props.type || "image";
     const ext = this.props.ext || ".jpg";
 
     for (let i = 1; i < 3; i++) {
@@ -189,7 +189,7 @@ class CrossCastLazyImage extends React.Component {
 
   createBrakePointsFluid(ratio) {
     const image = this.props.fluid;
-    const type = this.props.type;
+    const type = this.props.type || "image";
     const ext = this.props.ext || ".jpg";
     const step = image.step || 150;
     let size = image.size || 150;

@@ -47,7 +47,7 @@ var imageCache = {};
 
 var inImageCache = function inImageCache(props) {
   var image = props.fluid || props.fixed;
-  var type = props.type;
+  var type = props.type || "image";
   var ext = props.ext || ".jpg";
   var params = props.fluid ? "".concat(image.height ? "".concat(image.maxWidth, "x").concat(image.height) : "maxw-".concat(image.maxWidth)) : "".concat(image.width, "x").concat(image.height); // Find src
 
@@ -215,7 +215,7 @@ function (_React$Component) {
     value: function createBrakePointsFixed() {
       var results = [];
       var image = this.props.fixed;
-      var type = this.props.type;
+      var type = this.props.type || "image";
       var ext = this.props.ext || ".jpg";
 
       for (var i = 1; i < 3; i++) {
@@ -229,7 +229,7 @@ function (_React$Component) {
     key: "createBrakePointsFluid",
     value: function createBrakePointsFluid(ratio) {
       var image = this.props.fluid;
-      var type = this.props.type;
+      var type = this.props.type || "image";
       var ext = this.props.ext || ".jpg";
       var step = image.step || 150;
       var size = image.size || 150;
