@@ -407,7 +407,7 @@ var fluidObject = _propTypes["default"].shape({
   step: _propTypes["default"].number,
   size: _propTypes["default"].number,
   sizes: _propTypes["default"].arrayOf(_propTypes["default"].string),
-  ratio: _propTypes["default"].number
+  aspectRatio: _propTypes["default"].number
 });
 
 CrossCastLazyImage.propTypes = {
