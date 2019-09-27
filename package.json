@@ -1,6 +1,6 @@
 {
   "name": "@kframesa/react-crosscast-lazy-image",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Lazy-loading React image component based on CrossCast API",
   "main": "index.js",
   "scripts": {
@@ -16,17 +16,17 @@
   ],
   "author": "Kframe Interactive SA <marco@kframeinteractive.com>",
   "dependencies": {
-    "@babel/polyfill": "^7.4.4",
+    "@babel/polyfill": "^7.6.0",
     "prop-types": "^15.7.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.5.5",
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
+    "@babel/cli": "^7.6.2",
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
     "@babel/preset-react": "^7.0.0",
     "install": "^0.13.0",
-    "npm": "^6.11.2",
-    "standard": "^14.0.2"
+    "npm": "^6.11.3",
+    "standard": "^14.3.1"
   },
   "peerDependencies": {
     "react": "^16.9.0"

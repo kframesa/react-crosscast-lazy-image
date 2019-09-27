@@ -13,6 +13,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _readOnlyError(name) { throw new Error("\"" + name + "\" is read-only"); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -270,7 +272,8 @@ function (_React$Component) {
           width = _this$props.width,
           height = _this$props.height,
           _this$props$type = _this$props.type,
-          type = _this$props$type === void 0 ? "image" : _this$props$type;
+          type = _this$props$type === void 0 ? "image" : _this$props$type,
+          ratio = _this$props.ratio;
       var ext = this.props.ext || ".jpg";
       var bgColor = typeof backgroundColor === "boolean" ? "lightgray" : backgroundColor;
 
@@ -290,7 +293,7 @@ function (_React$Component) {
         alt: !this.state.isVisible ? alt : "",
         style: imagePlaceholderStyle
       };
-      var ratio = this.getRatio(width, height);
+      ratio = (_readOnlyError("ratio"), ratio || this.getRatio(width, height));
       var params;
       var image;
       var divStyle;
@@ -405,7 +408,8 @@ var fluidObject = _propTypes["default"].shape({
   height: _propTypes["default"].number,
   step: _propTypes["default"].number,
   size: _propTypes["default"].number,
-  sizes: _propTypes["default"].arrayOf(_propTypes["default"].string)
+  sizes: _propTypes["default"].arrayOf(_propTypes["default"].string),
+  ratio: _propTypes["default"].number
 });
 
 CrossCastLazyImage.propTypes = {

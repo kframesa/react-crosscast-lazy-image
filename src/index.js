@@ -16,9 +16,7 @@ const inImageCache = props => {
       }`
     : `${image.width}x${image.height}`;
   // Find src
-  const src = `https://scontent.ccdn.cloud/${type}/${props.platformSlug}/${
-    props.imageGuid
-  }/${params}${ext}`;
+  const src = `https://scontent.ccdn.cloud/${type}/${props.platformSlug}/${props.imageGuid}/${params}${ext}`;
 
   if (imageCache[src]) {
     return true;
@@ -179,9 +177,7 @@ class CrossCastLazyImage extends React.Component {
     for (let i = 1; i < 3; i++) {
       const params = `${image.width * i}x${image.height * i}`;
       results.push(
-        `https://scontent.ccdn.cloud/${type}/${this.props.platformSlug}/${
-          this.props.imageGuid
-        }/${params}${ext} ${i}x`
+        `https://scontent.ccdn.cloud/${type}/${this.props.platformSlug}/${this.props.imageGuid}/${params}${ext} ${i}x`
       );
     }
     return results.join(",");
@@ -200,9 +196,7 @@ class CrossCastLazyImage extends React.Component {
         image.height ? `${size}x${Math.round(size * ratio)}` : `maxw-${size}`
       }`;
       results.push(
-        `https://scontent.ccdn.cloud/${type}/${this.props.platformSlug}/${
-          this.props.imageGuid
-        }/${params}${ext} ${size}w`
+        `https://scontent.ccdn.cloud/${type}/${this.props.platformSlug}/${this.props.imageGuid}/${params}${ext} ${size}w`
       );
       size = size + step;
     }
@@ -238,7 +232,8 @@ class CrossCastLazyImage extends React.Component {
       backgroundColor,
       width,
       height,
-      type = "image"
+      type = "image",
+      ratio
     } = this.props;
 
     const ext = this.props.ext || ".jpg";
@@ -265,7 +260,7 @@ class CrossCastLazyImage extends React.Component {
       alt: !this.state.isVisible ? alt : ``,
       style: imagePlaceholderStyle
     };
-    const ratio = this.getRatio(width, height);
+    ratio = ratio || this.getRatio(width, height);
     let params;
     let image;
     let divStyle;
@@ -397,7 +392,8 @@ const fluidObject = PropTypes.shape({
   height: PropTypes.number,
   step: PropTypes.number,
   size: PropTypes.number,
-  sizes: PropTypes.arrayOf(PropTypes.string)
+  sizes: PropTypes.arrayOf(PropTypes.string),
+  ratio: PropTypes.number
 });
 
 CrossCastLazyImage.propTypes = {
