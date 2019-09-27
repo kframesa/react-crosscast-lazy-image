@@ -233,7 +233,7 @@ class CrossCastLazyImage extends React.Component {
       width,
       height,
       type = "image",
-      ratio
+      aspectRatio
     } = this.props;
 
     const ext = this.props.ext || ".jpg";
@@ -260,7 +260,7 @@ class CrossCastLazyImage extends React.Component {
       alt: !this.state.isVisible ? alt : ``,
       style: imagePlaceholderStyle
     };
-    ratio = ratio || this.getRatio(width, height);
+    const ratio = aspectRatio || this.getRatio(width, height);
     let params;
     let image;
     let divStyle;
