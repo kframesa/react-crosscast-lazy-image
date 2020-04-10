@@ -11,7 +11,7 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -19,21 +19,25 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -112,7 +116,7 @@ var Img = _react["default"].forwardRef(function (props, ref) {
       onError = props.onError,
       otherProps = _objectWithoutProperties(props, ["style", "onLoad", "onError"]);
 
-  return _react["default"].createElement("img", _extends({}, otherProps, {
+  return /*#__PURE__*/_react["default"].createElement("img", _extends({}, otherProps, {
     onLoad: onLoad,
     onError: onError,
     ref: ref,
@@ -134,17 +138,17 @@ Img.propTypes = {
   onLoad: _propTypes["default"].func
 };
 
-var CrossCastLazyImage =
-/*#__PURE__*/
-function (_React$Component) {
+var CrossCastLazyImage = /*#__PURE__*/function (_React$Component) {
   _inherits(CrossCastLazyImage, _React$Component);
+
+  var _super = _createSuper(CrossCastLazyImage);
 
   function CrossCastLazyImage(props) {
     var _this;
 
     _classCallCheck(this, CrossCastLazyImage);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(CrossCastLazyImage).call(this, props)); // If this browser doesn't support the IntersectionObserver API
+    _this = _super.call(this, props); // If this browser doesn't support the IntersectionObserver API
     // we default to start downloading the image right away.
 
     var isVisible = true;
@@ -353,15 +357,15 @@ function (_React$Component) {
 
       if (fluid || fixed) {
         image.src = "https://scontent.ccdn.cloud/".concat(type, "/").concat(platformSlug, "/").concat(imageGuid, "/").concat(params).concat(ext);
-        return _react["default"].createElement("div", {
+        return /*#__PURE__*/_react["default"].createElement("div", {
           style: divStyle,
           ref: this.handleRef
-        }, !bgColor && _react["default"].createElement(Img, _extends({
+        }, !bgColor && /*#__PURE__*/_react["default"].createElement(Img, _extends({
           src: "https://scontent.ccdn.cloud/".concat(type, "/").concat(platformSlug, "/").concat(imageGuid, "/maxw-20").concat(ext)
-        }, placeholderImageProps)), bgColor && _react["default"].createElement("div", {
+        }, placeholderImageProps)), bgColor && /*#__PURE__*/_react["default"].createElement("div", {
           title: title,
           style: bgPlaceholderStyles
-        }), this.state.isVisible && _react["default"].createElement(Img, {
+        }), this.state.isVisible && /*#__PURE__*/_react["default"].createElement(Img, {
           alt: alt,
           title: title,
           srcSet: srcSet,
@@ -371,7 +375,7 @@ function (_React$Component) {
           ref: this.imageRef,
           onLoad: this.handleImageLoaded,
           onError: this.props.onError
-        }), this.state.hasNoScript && _react["default"].createElement("noscript", {
+        }), this.state.hasNoScript && /*#__PURE__*/_react["default"].createElement("noscript", {
           dangerouslySetInnerHTML: {
             __html: noscriptImg(_objectSpread({
               alt: alt,
