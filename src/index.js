@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 // Cache if we've seen an image before so we don't both with
 // lazy-loading & fading in on subsequent mounts.
 const imageCache = {};
-const inImageCache = props => {
+const inImageCache = (props) => {
   const image = props.fluid || props.fixed;
   const type = props.type || "image";
   const ext = props.ext || ".jpg";
@@ -36,9 +36,9 @@ function getIO() {
     window.IntersectionObserver
   ) {
     io = new window.IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          listeners.forEach(l => {
+      (entries) => {
+        entries.forEach((entry) => {
+          listeners.forEach((l) => {
             if (l[0] === entry.target) {
               // Edge doesn't currently support isIntersecting, so also test for an intersectionRatio > 0
               if (entry.isIntersecting || entry.intersectionRatio > 0) {
@@ -61,7 +61,7 @@ const listenToIntersections = (el, cb) => {
   listeners.push([el, cb]);
 };
 
-const noscriptImg = props => {
+const noscriptImg = (props) => {
   // Check if prop exists before adding each attribute to the string output below to prevent
   // HTML validation issues caused by empty values like width="" and height=""
   const src = props.src ? `src="${props.src}" ` : `src="" `; // required attribute
@@ -73,7 +73,27 @@ const noscriptImg = props => {
   const transitionDelay = props.transitionDelay
     ? props.transitionDelay
     : `0.5s`;
-  return `<img ${width}${height}${src}${alt}${title}style="position:absolute;top:0;left:0;transition:opacity 0.5s;transition-delay:${transitionDelay};opacity:${opacity};width:100%;height:100%;object-fit:cover;object-position:center"/>`;
+  return `<img ${width}${height}${src}${alt}${title} style="position:absolute;top:0;left:0;transition:opacity 0.5s;transition-delay:${transitionDelay};opacity:${opacity};width:100%;height:100%;object-fit:cover;object-position:center"/>`;
+};
+
+const noscriptPicture = (props) => {
+  // Check if prop exists before adding each attribute to the string output below to prevent
+  // HTML validation issues caused by empty values like width="" and height=""
+  const src = props.src ? `src="${props.src}" ` : `src="" `; // required attribute
+  const srcSet = props.srcSet ? `srcset="${props.srcSet}" ` : `srcset="" `;
+  const sizes = props.sizes ? `sizes="${props.sizes}" ` : `sizes="" `;
+  const title = props.title ? `title="${props.title}" ` : ``;
+  const alt = `alt="${props.alt}"`; // required attribute
+  const width = props.width ? `width="${props.width}" ` : ``;
+  const height = props.height ? `height="${props.height}" ` : ``;
+  const opacity = props.opacity ? props.opacity : `1`;
+  const transitionDelay = props.transitionDelay
+    ? props.transitionDelay
+    : `0.5s`;
+  return `<picture><source ${srcSet.replace(
+    /\.jpg$|\.png$/g,
+    ".webp"
+  )}${sizes} type='image/webp' /><source ${srcSet}${sizes} /><img ${width}${height}${src}${alt}${title} style="position:absolute;top:0;left:0;transition:opacity 0.5s;transition-delay:${transitionDelay};opacity:${opacity};width:100%;height:100%;object-fit:cover;object-position:center"/></picture>`;
 };
 
 const Img = React.forwardRef((props, ref) => {
@@ -93,7 +113,7 @@ const Img = React.forwardRef((props, ref) => {
         height: `100%`,
         objectFit: `cover`,
         objectPosition: `center`,
-        ...style
+        ...style,
       }}
     />
   );
@@ -102,8 +122,41 @@ const Img = React.forwardRef((props, ref) => {
 Img.propTypes = {
   style: PropTypes.object,
   onError: PropTypes.func,
-  onLoad: PropTypes.func
+  onLoad: PropTypes.func,
 };
+
+const Picture = React.forwardRef((props, ref) => {
+  const { style, onLoad, onError, ...otherProps } = props;
+  const { src, srcSet, sizes } = props;
+  const source = srcSet ? srcSet : src;
+
+  return (
+    <picture>
+      <source
+        srcSet={source.replace(/\.jpg$|\.png$/g, ".webp")}
+        sizes={sizes}
+        type="image/webp"
+      />
+      <source srcSet={source} sizes={sizes} />
+      <img
+        {...otherProps}
+        onLoad={onLoad}
+        onError={onError}
+        ref={ref}
+        style={{
+          position: `absolute`,
+          top: 0,
+          left: 0,
+          width: `100%`,
+          height: `100%`,
+          objectFit: `cover`,
+          objectPosition: `center`,
+          ...style,
+        }}
+      />
+    </picture>
+  );
+});
 
 class CrossCastLazyImage extends React.Component {
   constructor(props) {
@@ -144,7 +197,7 @@ class CrossCastLazyImage extends React.Component {
       IOSupported,
       fadeIn,
       hasNoScript,
-      seenBefore
+      seenBefore,
     };
 
     this.imageRef = React.createRef();
@@ -233,7 +286,7 @@ class CrossCastLazyImage extends React.Component {
       width,
       height,
       type = "image",
-      aspectRatio
+      aspectRatio,
     } = this.props;
 
     const ext = this.props.ext || ".jpg";
@@ -246,19 +299,19 @@ class CrossCastLazyImage extends React.Component {
       transition: `opacity 0.5s`,
       transitionDelay: this.state.imgLoaded ? `0.5s` : `0.25s`,
       ...imgStyle,
-      ...placeholderStyle
+      ...placeholderStyle,
     };
 
     const imageStyle = {
       opacity: this.state.imgLoaded || this.state.fadeIn === false ? 1 : 0,
       transition: this.state.fadeIn === true ? `opacity 0.5s` : `none`,
-      ...imgStyle
+      ...imgStyle,
     };
 
     const placeholderImageProps = {
       title,
       alt: !this.state.isVisible ? alt : ``,
-      style: imagePlaceholderStyle
+      style: imagePlaceholderStyle,
     };
     const ratio = aspectRatio || this.getRatio(width, height);
     let params;
@@ -273,13 +326,13 @@ class CrossCastLazyImage extends React.Component {
       divStyle = {
         position: `relative`,
         overflow: `hidden`,
-        ...style
+        ...style,
       };
 
       if (ratio !== 0) {
         divStyle = {
           ...divStyle,
-          paddingBottom: `${(ratio * 100).toFixed(2)}%`
+          paddingBottom: `${(ratio * 100).toFixed(2)}%`,
         };
       }
 
@@ -291,7 +344,7 @@ class CrossCastLazyImage extends React.Component {
         opacity: !this.state.imgLoaded ? 1 : 0,
         transitionDelay: `0.35s`,
         right: 0,
-        left: 0
+        left: 0,
       };
       srcSet = this.createBrakePointsFluid(ratio);
       sizes = image.sizes ? image.sizes.join(", ") : "";
@@ -310,14 +363,14 @@ class CrossCastLazyImage extends React.Component {
         display: `inline-block`,
         width: image.width,
         height: image.height,
-        ...style
+        ...style,
       };
       bgPlaceholderStyles = {
         backgroundColor: bgColor,
         width: image.width,
         height: image.height,
         opacity: !this.state.imgLoaded ? 1 : 0,
-        transitionDelay: `0.25s`
+        transitionDelay: `0.25s`,
       };
       srcSet = this.createBrakePointsFixed();
       params = `${image.width}x${image.height}`;
@@ -333,8 +386,15 @@ class CrossCastLazyImage extends React.Component {
       return (
         <div style={divStyle} ref={this.handleRef}>
           {/* Show a blurred version. */}
-          {!bgColor && (
+          {!bgColor && ext === ".gif" && (
             <Img
+              src={`https://scontent.ccdn.cloud/${type}/${platformSlug}/${imageGuid}/maxw-20${ext}`}
+              {...placeholderImageProps}
+            />
+          )}
+
+          {!bgColor && ext !== ".gif" && (
+            <Picture
               src={`https://scontent.ccdn.cloud/${type}/${platformSlug}/${imageGuid}/maxw-20${ext}`}
               {...placeholderImageProps}
             />
@@ -344,7 +404,7 @@ class CrossCastLazyImage extends React.Component {
           {bgColor && <div title={title} style={bgPlaceholderStyles} />}
 
           {/* Once the image is visible (or the browser doesn't support IntersectionObserver), start downloading the image */}
-          {this.state.isVisible && (
+          {this.state.isVisible && ext === ".gif" && (
             <Img
               alt={alt}
               title={title}
@@ -358,11 +418,33 @@ class CrossCastLazyImage extends React.Component {
             />
           )}
 
+          {this.state.isVisible && ext !== ".gif" && (
+            <Picture
+              alt={alt}
+              title={title}
+              srcSet={srcSet}
+              sizes={sizes}
+              src={image.src}
+              style={imageStyle}
+              ref={this.imageRef}
+              onLoad={this.handleImageLoaded}
+              onError={this.props.onError}
+            />
+          )}
+
           {/* Show the original image during server-side rendering if JavaScript is disabled */}
-          {this.state.hasNoScript && (
+          {this.state.hasNoScript && ext === ".gif" && (
             <noscript
               dangerouslySetInnerHTML={{
-                __html: noscriptImg({ alt, title, ...image })
+                __html: noscriptImg({ alt, title, ...image }),
+              }}
+            />
+          )}
+
+          {this.state.hasNoScript && ext !== ".gif" && (
+            <noscript
+              dangerouslySetInnerHTML={{
+                __html: noscriptPicture({ alt, title, ...image }),
               }}
             />
           )}
@@ -379,12 +461,12 @@ CrossCastLazyImage.defaultProps = {
   fadeIn: true,
   alt: ``,
   imgFormat: true,
-  quality: true
+  quality: true,
 };
 
 const fixedObject = PropTypes.shape({
   width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired
+  height: PropTypes.number.isRequired,
 });
 
 const fluidObject = PropTypes.shape({
@@ -393,7 +475,7 @@ const fluidObject = PropTypes.shape({
   step: PropTypes.number,
   size: PropTypes.number,
   sizes: PropTypes.arrayOf(PropTypes.string),
-  aspectRatio: PropTypes.number
+  aspectRatio: PropTypes.number,
 });
 
 CrossCastLazyImage.propTypes = {
@@ -411,7 +493,7 @@ CrossCastLazyImage.propTypes = {
   onLoad: PropTypes.func,
   onError: PropTypes.func,
   imgFormat: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  quality: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
+  quality: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
 };
 
 export default CrossCastLazyImage;
