@@ -23,7 +23,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
@@ -107,7 +107,24 @@ var noscriptImg = function noscriptImg(props) {
   var height = props.height ? "height=\"".concat(props.height, "\" ") : "";
   var opacity = props.opacity ? props.opacity : "1";
   var transitionDelay = props.transitionDelay ? props.transitionDelay : "0.5s";
-  return "<img ".concat(width).concat(height).concat(src).concat(alt).concat(title, "style=\"position:absolute;top:0;left:0;transition:opacity 0.5s;transition-delay:").concat(transitionDelay, ";opacity:").concat(opacity, ";width:100%;height:100%;object-fit:cover;object-position:center\"/>");
+  return "<img ".concat(width).concat(height).concat(src).concat(alt).concat(title, " style=\"position:absolute;top:0;left:0;transition:opacity 0.5s;transition-delay:").concat(transitionDelay, ";opacity:").concat(opacity, ";width:100%;height:100%;object-fit:cover;object-position:center\"/>");
+};
+
+var noscriptPicture = function noscriptPicture(props) {
+  // Check if prop exists before adding each attribute to the string output below to prevent
+  // HTML validation issues caused by empty values like width="" and height=""
+  var src = props.src ? "src=\"".concat(props.src, "\" ") : "src=\"\" "; // required attribute
+
+  var srcSet = props.srcSet ? "srcset=\"".concat(props.srcSet, "\" ") : "srcset=\"\" ";
+  var sizes = props.sizes ? "sizes=\"".concat(props.sizes, "\" ") : "sizes=\"\" ";
+  var title = props.title ? "title=\"".concat(props.title, "\" ") : "";
+  var alt = "alt=\"".concat(props.alt, "\""); // required attribute
+
+  var width = props.width ? "width=\"".concat(props.width, "\" ") : "";
+  var height = props.height ? "height=\"".concat(props.height, "\" ") : "";
+  var opacity = props.opacity ? props.opacity : "1";
+  var transitionDelay = props.transitionDelay ? props.transitionDelay : "0.5s";
+  return "<picture><source ".concat(srcSet.replace(/\.jpg|\.png/g, ".webp")).concat(sizes, " type='image/webp' /><source ").concat(srcSet).concat(sizes, " /><img ").concat(width).concat(height).concat(src).concat(alt).concat(title, " style=\"position:absolute;top:0;left:0;transition:opacity 0.5s;transition-delay:").concat(transitionDelay, ";opacity:").concat(opacity, ";width:100%;height:100%;object-fit:cover;object-position:center\"/></picture>");
 };
 
 var Img = _react["default"].forwardRef(function (props, ref) {
@@ -137,6 +154,39 @@ Img.propTypes = {
   onError: _propTypes["default"].func,
   onLoad: _propTypes["default"].func
 };
+
+var Picture = _react["default"].forwardRef(function (props, ref) {
+  var style = props.style,
+      onLoad = props.onLoad,
+      onError = props.onError,
+      otherProps = _objectWithoutProperties(props, ["style", "onLoad", "onError"]);
+
+  var src = props.src,
+      srcSet = props.srcSet,
+      sizes = props.sizes;
+  var source = srcSet ? srcSet : src;
+  return /*#__PURE__*/_react["default"].createElement("picture", null, /*#__PURE__*/_react["default"].createElement("source", {
+    srcSet: source.replace(/\.jpg|\.png/g, ".webp"),
+    sizes: sizes,
+    type: "image/webp"
+  }), /*#__PURE__*/_react["default"].createElement("source", {
+    srcSet: source,
+    sizes: sizes
+  }), /*#__PURE__*/_react["default"].createElement("img", _extends({}, otherProps, {
+    onLoad: onLoad,
+    onError: onError,
+    ref: ref,
+    style: _objectSpread({
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+      objectPosition: "center"
+    }, style)
+  })));
+});
 
 var CrossCastLazyImage = /*#__PURE__*/function (_React$Component) {
   _inherits(CrossCastLazyImage, _React$Component);
@@ -279,11 +329,11 @@ var CrossCastLazyImage = /*#__PURE__*/function (_React$Component) {
       var ext = this.props.ext || ".jpg";
       var bgColor = typeof backgroundColor === "boolean" ? "lightgray" : backgroundColor;
 
-      var imagePlaceholderStyle = _objectSpread({
+      var imagePlaceholderStyle = _objectSpread(_objectSpread({
         opacity: this.state.imgLoaded ? 0 : 1,
         transition: "opacity 0.5s",
         transitionDelay: this.state.imgLoaded ? "0.5s" : "0.25s"
-      }, imgStyle, {}, placeholderStyle);
+      }, imgStyle), placeholderStyle);
 
       var imageStyle = _objectSpread({
         opacity: this.state.imgLoaded || this.state.fadeIn === false ? 1 : 0,
@@ -311,7 +361,7 @@ var CrossCastLazyImage = /*#__PURE__*/function (_React$Component) {
         }, style);
 
         if (ratio !== 0) {
-          divStyle = _objectSpread({}, divStyle, {
+          divStyle = _objectSpread(_objectSpread({}, divStyle), {}, {
             paddingBottom: "".concat((ratio * 100).toFixed(2), "%")
           });
         }
@@ -360,12 +410,14 @@ var CrossCastLazyImage = /*#__PURE__*/function (_React$Component) {
         return /*#__PURE__*/_react["default"].createElement("div", {
           style: divStyle,
           ref: this.handleRef
-        }, !bgColor && /*#__PURE__*/_react["default"].createElement(Img, _extends({
+        }, !bgColor && ext === ".gif" && /*#__PURE__*/_react["default"].createElement(Img, _extends({
+          src: "https://scontent.ccdn.cloud/".concat(type, "/").concat(platformSlug, "/").concat(imageGuid, "/maxw-20").concat(ext)
+        }, placeholderImageProps)), !bgColor && ext !== ".gif" && /*#__PURE__*/_react["default"].createElement(Picture, _extends({
           src: "https://scontent.ccdn.cloud/".concat(type, "/").concat(platformSlug, "/").concat(imageGuid, "/maxw-20").concat(ext)
         }, placeholderImageProps)), bgColor && /*#__PURE__*/_react["default"].createElement("div", {
           title: title,
           style: bgPlaceholderStyles
-        }), this.state.isVisible && /*#__PURE__*/_react["default"].createElement(Img, {
+        }), this.state.isVisible && ext === ".gif" && /*#__PURE__*/_react["default"].createElement(Img, {
           alt: alt,
           title: title,
           srcSet: srcSet,
@@ -375,9 +427,26 @@ var CrossCastLazyImage = /*#__PURE__*/function (_React$Component) {
           ref: this.imageRef,
           onLoad: this.handleImageLoaded,
           onError: this.props.onError
-        }), this.state.hasNoScript && /*#__PURE__*/_react["default"].createElement("noscript", {
+        }), this.state.isVisible && ext !== ".gif" && /*#__PURE__*/_react["default"].createElement(Picture, {
+          alt: alt,
+          title: title,
+          srcSet: srcSet,
+          sizes: sizes,
+          src: image.src,
+          style: imageStyle,
+          ref: this.imageRef,
+          onLoad: this.handleImageLoaded,
+          onError: this.props.onError
+        }), this.state.hasNoScript && ext === ".gif" && /*#__PURE__*/_react["default"].createElement("noscript", {
           dangerouslySetInnerHTML: {
             __html: noscriptImg(_objectSpread({
+              alt: alt,
+              title: title
+            }, image))
+          }
+        }), this.state.hasNoScript && ext !== ".gif" && /*#__PURE__*/_react["default"].createElement("noscript", {
+          dangerouslySetInnerHTML: {
+            __html: noscriptPicture(_objectSpread({
               alt: alt,
               title: title
             }, image))

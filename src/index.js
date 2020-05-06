@@ -91,7 +91,7 @@ const noscriptPicture = (props) => {
     ? props.transitionDelay
     : `0.5s`;
   return `<picture><source ${srcSet.replace(
-    /\.jpg$|\.png$/g,
+    /\.jpg|\.png/g,
     ".webp"
   )}${sizes} type='image/webp' /><source ${srcSet}${sizes} /><img ${width}${height}${src}${alt}${title} style="position:absolute;top:0;left:0;transition:opacity 0.5s;transition-delay:${transitionDelay};opacity:${opacity};width:100%;height:100%;object-fit:cover;object-position:center"/></picture>`;
 };
@@ -133,7 +133,7 @@ const Picture = React.forwardRef((props, ref) => {
   return (
     <picture>
       <source
-        srcSet={source.replace(/\.jpg$|\.png$/g, ".webp")}
+        srcSet={source.replace(/\.jpg|\.png/g, ".webp")}
         sizes={sizes}
         type="image/webp"
       />
