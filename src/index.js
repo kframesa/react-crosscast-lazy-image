@@ -444,7 +444,7 @@ class CrossCastLazyImage extends React.Component {
           {this.state.hasNoScript && ext !== ".gif" && (
             <noscript
               dangerouslySetInnerHTML={{
-                __html: noscriptPicture({ alt, title, ...image }),
+                __html: noscriptPicture({ alt, title, srcSet, ...image }),
               }}
             />
           )}

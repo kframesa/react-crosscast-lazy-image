@@ -1,6 +1,6 @@
 {
   "name": "@kframesa/react-crosscast-lazy-image",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Lazy-loading React image component based on CrossCast API",
   "main": "index.js",
   "scripts": {
