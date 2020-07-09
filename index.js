@@ -23,7 +23,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
@@ -127,7 +127,7 @@ var noscriptPicture = function noscriptPicture(props) {
   return "<picture><source ".concat(srcSet.replace(/\.jpg|\.png/g, ".webp")).concat(sizes, " type='image/webp' /><source ").concat(srcSet).concat(sizes, " /><img ").concat(width).concat(height).concat(src).concat(alt).concat(title, " style=\"position:absolute;top:0;left:0;transition:opacity 0.5s;transition-delay:").concat(transitionDelay, ";opacity:").concat(opacity, ";width:100%;height:100%;object-fit:cover;object-position:center\"/></picture>");
 };
 
-var Img = _react["default"].forwardRef(function (props, ref) {
+var Img = /*#__PURE__*/_react["default"].forwardRef(function (props, ref) {
   var style = props.style,
       onLoad = props.onLoad,
       onError = props.onError,
@@ -155,7 +155,7 @@ Img.propTypes = {
   onLoad: _propTypes["default"].func
 };
 
-var Picture = _react["default"].forwardRef(function (props, ref) {
+var Picture = /*#__PURE__*/_react["default"].forwardRef(function (props, ref) {
   var style = props.style,
       onLoad = props.onLoad,
       onError = props.onError,
@@ -230,7 +230,7 @@ var CrossCastLazyImage = /*#__PURE__*/function (_React$Component) {
       hasNoScript: hasNoScript,
       seenBefore: seenBefore
     };
-    _this.imageRef = _react["default"].createRef();
+    _this.imageRef = /*#__PURE__*/_react["default"].createRef();
     _this.handleImageLoaded = _this.handleImageLoaded.bind(_assertThisInitialized(_this));
     _this.handleRef = _this.handleRef.bind(_assertThisInitialized(_this));
     return _this;
@@ -448,7 +448,8 @@ var CrossCastLazyImage = /*#__PURE__*/function (_React$Component) {
           dangerouslySetInnerHTML: {
             __html: noscriptPicture(_objectSpread({
               alt: alt,
-              title: title
+              title: title,
+              srcSet: srcSet
             }, image))
           }
         }));
