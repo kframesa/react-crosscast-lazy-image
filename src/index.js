@@ -79,9 +79,9 @@ const noscriptImg = (props) => {
 const noscriptPicture = (props) => {
   // Check if prop exists before adding each attribute to the string output below to prevent
   // HTML validation issues caused by empty values like width="" and height=""
-  const src = props.src ? `src="${props.src}" ` : `src="" `; // required attribute
-  const srcSet = props.srcSet ? `srcset="${props.srcSet}" ` : `srcset="" `;
-  const sizes = props.sizes ? `sizes="${props.sizes}" ` : `sizes="" `;
+  const src = `src="${props.src}" `; // required attribute
+  const srcSet = props.srcSet ? `srcset="${props.srcSet}" ` : ``;
+  const sizes = props.sizes ? `sizes="${props.sizes}" ` : ``;
   const title = props.title ? `title="${props.title}" ` : ``;
   const alt = `alt="${props.alt}"`; // required attribute
   const width = props.width ? `width="${props.width}" ` : ``;
@@ -347,7 +347,7 @@ class CrossCastLazyImage extends React.Component {
         left: 0,
       };
       srcSet = this.createBrakePointsFluid(ratio);
-      sizes = image.sizes ? image.sizes.join(", ") : "";
+      sizes = image.sizes ? image.sizes.join(", ") : null;
       params = `${
         image.height
           ? `${image.maxWidth}x${image.height}`
