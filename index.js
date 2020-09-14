@@ -113,10 +113,10 @@ var noscriptImg = function noscriptImg(props) {
 var noscriptPicture = function noscriptPicture(props) {
   // Check if prop exists before adding each attribute to the string output below to prevent
   // HTML validation issues caused by empty values like width="" and height=""
-  var src = props.src ? "src=\"".concat(props.src, "\" ") : "src=\"\" "; // required attribute
+  var src = "src=\"".concat(props.src, "\" "); // required attribute
 
-  var srcSet = props.srcSet ? "srcset=\"".concat(props.srcSet, "\" ") : "srcset=\"\" ";
-  var sizes = props.sizes ? "sizes=\"".concat(props.sizes, "\" ") : "sizes=\"\" ";
+  var srcSet = props.srcSet ? "srcset=\"".concat(props.srcSet, "\" ") : "";
+  var sizes = props.sizes ? "sizes=\"".concat(props.sizes, "\" ") : "";
   var title = props.title ? "title=\"".concat(props.title, "\" ") : "";
   var alt = "alt=\"".concat(props.alt, "\""); // required attribute
 
@@ -377,7 +377,7 @@ var CrossCastLazyImage = /*#__PURE__*/function (_React$Component) {
           left: 0
         };
         srcSet = this.createBrakePointsFluid(ratio);
-        sizes = image.sizes ? image.sizes.join(", ") : "";
+        sizes = image.sizes ? image.sizes.join(", ") : null;
         params = "".concat(image.height ? "".concat(image.maxWidth, "x").concat(image.height) : "maxw-".concat(image.maxWidth));
       }
 
